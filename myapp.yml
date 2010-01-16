@@ -1,0 +1,19 @@
+name: MyApp
+Plugin::Authentication:
+   default_realm: members
+   realms:
+      members:
+         credential:
+            class: Password
+            password_field: password
+            password_type: clear
+         store:
+            class: DBIx::Class
+            user_class: MyAppDB::User
+            role_relation: roles
+            role_field: role
+            role_class: MyAppDB::Role
+Model::MyAppDB:
+   schema_class: MyAppDB
+   connect_info:
+      - DBI:SQLite:__HOME__/myapp.db

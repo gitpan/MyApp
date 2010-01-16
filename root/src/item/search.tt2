@@ -1,0 +1,16 @@
+[% META title = "SEARCH" %]
+<p>
+<form action="[% Catalyst.uri_for('/item/search_do') %]" method="POST">
+	<select id="sel" name="sel">
+		<option value="">All</option>
+		[% WHILE (genre = genres.next) %]
+		<option value="[% genre.id %]">[% genre.name %]</option>
+		[% END %]
+	</select>
+	<input type="text" name="txt">
+	<input type="submit" value="Search"/>
+</form>
+<p>
+<a href="[% Catalyst.uri_for('add') %]">Add Movie</a>
+<p>
+</p>

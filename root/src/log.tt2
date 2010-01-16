@@ -1,0 +1,100 @@
+[% META title = 'View Logs' %]
+<a href="[% Catalyst.uri_for('/menu') %]">Menu</a>
+<p>
+<span class="date"><b>01/07/09</b></span>
+<PRE>
+1. be careful to use different identifier to call check_user_roles()
+xxx.tt2
+IF Catalyst.check_user_roles('admin')
+xxx.pm 
+$c->check_user_roles(qw/admin/)
+
+2. Add authorization successfully
+MyApp.pm
+__PACKAGE__->config(
+	'Plugin::Authentication' => {
+		default_realm => 'members',
+		members       => {
+			credential => {
+				class          => 'Password',
+				password_field => 'password',
+				password_type  => 'clear'
+			},
+			store => {
+				class                => 'DBIx::Class',
+				user_class           => 'MyAppDB::User',
+				role_relation        => 'roles',				
+				role_field           => 'role',
+				role_class           => 'MyAppDB::Role',
+			}
+		}
+	},
+);
+
+3.backup V1.05
+
+4.test accounts:
+admin : test02-mypass
+user : test01-mypass
+
+5.testing 
+Apache: Need to run this command every time as change happens.
+sudo service httpd restart
+
+Development Server: Only run this command in the beginning.
+perl script/myapp_server.pl -r -d
+</PRE>
+<span class="date"><b>01/08/09</b></span>
+<PRE>
+1. learn how to embed breakpoints in code and run Perl debugger
+http://search.cpan.org/~hkclark/Catalyst-Manual-5.8002/lib/Catalyst/Manual/Tutorial/07_Debugging.pod
+
+1.1 embed this line in the code
+$DB::single = 1; 
+1.2 run these commands
+$ export DBIC_TRACE=1
+$ perl -d script/myapp_server.pl
+
+2.1 fixed problem in /user/view where the role column in each row is the same : 'admin'
+wrong:
+FOR row = Catalyst.user.roles
+correct:
+FOR row = user.roles
+	row.role
+END
+
+3.finish text-search feature
+
+$c->model('AddressDB::People')->all()
+$c->model('MyAppDB::User')->search( { username => $id } )
+return DBIx::Class::ResultSet 
+
+$c->model('MyAppDB::User')->find( $id )
+return DBIx::Class::Row
+
+$rs = $rs->page($page);
+$rs->pager()
+return Data::Page
+stores metadata about the paged resultset
+
+1.9
+1.register web hosting : 10xhosting
+2.study 
+Installing mod_perl without superuser privileges = install Perl modules in a nonsystem-wide location
+http://www.perl.com/pub/a/2002/04/10/mod_perl.html
+
+2.1 download Apache 1.3.41 : apache_1.3.41.tar.gz 
+http://httpd.apache.org/download.cgi
+
+2.2 download mod_perl tar
+perl Makefile.PL PREFIX=/home/cmo
+
+Installing /home/cmo/myperl/lib/i386-linux-thread-multi
+
+
+====
+fast cgi
+http://www.mail-archive.com/catalyst@lists.scsys.co.uk/msg07253.html
+
+tail -f /opt/apache-1.3.37/shared/logs/sol.students.error_log | grep cmo
+

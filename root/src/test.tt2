@@ -1,0 +1,43 @@
+[% META title = "test" %]
+
+<div id="header">
+<!-- BEGIN site/header -->
+<table width="100%" cellpadding="0" cellspacing="0">
+	<tr><td>
+			<a href="/" class="sitetitle">SMMID DB</a>
+		</td>
+		<td align="right">
+			<a href="/static/SMMID_06102008.pdf">About</a> | <a href="/browse">Browse</a> | <a href="/contact">Contact</a>
+		</td>
+	</tr>
+</table>
+<!-- END site/header -->
+</div>
+
+hello<br>
+[% FOR field = fields %]
+x=[% field %]<br>
+[% END %]
+
+[% WHILE (user = users.next) %]
+xx=[% user.first_name %]<br>
+[% END %]
+
+<p>
+[% WHILE (item = items.next) %]
+t=[% item.name %]<br>
+[% END %]
+
+<a href="test?page=[% pager.first_page %]">First</a>
+[% IF (pager.previous_page) %]
+<a href="test?page=[% pager.previous_page %]">Previous</a>
+[% END %]
+[% IF (pager.next_page) %]
+<a href="test?page=[% pager.next_page %]">Next</a>
+[% END %]
+<a href="test?page=[% pager.last_page %]">Last</a>
+<p>
+total entries = [% pager.total_entries %]
+</p>
+entries_per_page = [% pager.entries_per_page %]
+<p>
